@@ -1,0 +1,57 @@
+# prank_all_in_one.py
+import tkinter as tk
+from random import randint
+import pyautogui
+import time
+import os
+
+# -------------------------------
+# 1️⃣ Desktop-Hintergrund ändern
+# -------------------------------
+# Bildpfad anpassen, z.B. lustige Katze
+background_path = "/home/pi/Pictures/funny_cat.jpg"
+if os.path.exists(background_path):
+    os.system(f"pcmanfm --set-wallpaper {background_path}")  # LXDE / Raspberry Pi OS
+
+# -------------------------------
+# 2️⃣ Chat-Streich (harmlos)
+# -------------------------------
+# Funktioniert in Browser-Chats oder Programmen, Fokus muss auf Chatfenster
+messages = ["😎 Überraschung!", "😂 Lustiger Streich!", "🐱 Katze greift an!"]
+
+def prank_chat():
+    time.sleep(5)  # Zeit, um Chatfenster zu fokussieren
+    for msg in messages:
+        pyautogui.typewrite(msg)
+        pyautogui.press("enter")
+        time.sleep(2)
+
+# -------------------------------
+# 3️⃣ Pop-up-Fenster bewegen
+# -------------------------------
+def popup_window():
+    root = tk.Tk()
+    root.title("Achtung! Harmloser Streich 😄")
+    root.geometry("300x100")
+
+    label = tk.Label(root, text="Du wurdest erwischt!", font=("Arial", 14))
+    label.pack()
+
+    def move_window():
+        x = randint(0, 800)
+        y = randint(0, 480)
+        root.geometry(f"+{x}+{y}")
+        root.after(1000, move_window)
+
+    move_window()
+    root.mainloop()
+
+# -------------------------------
+# Alles gleichzeitig starten
+# -------------------------------
+import threading
+
+# Pop-up in eigenem Thread starten
+threading.Thread(target=popup_window).start()
+# Chat-Streich starten
+threading.Thread(target=prank_chat).start()
